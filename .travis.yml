@@ -1,0 +1,29 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  # -t: docker hub username -f: override default dockerfile, and build context (./client)
+  - docker build -t tomtom92/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  # creates a test script (with ability to exit)
+  - docker run tomtom92/react-test npm test -- --coverage
+
+after_success:
+  # build services
+  - docker build -t tomtom92/multi-client ./client
+  - docker build -t tomtom92/multi-nginxt ./nginx
+  - docker build -t tomtom92/multi-server ./server
+  - docker build -t tomtom92/multi-worker ./worker
+
+  # login to docker CLI (note, credentials were added on travis-ci previously)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # push off everything to docker hub
+  - docker push tomtom92/multi-client
+  - docker push tomtom92/multi-nginx
+  - docker push tomtom92/multi-server
+  - docker push tomtom92/multi-worker
+
+
