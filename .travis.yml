@@ -18,7 +18,7 @@ after_success:
   - docker build -t tomtom92/multi-worker ./worker
 
   # login to docker CLI (note, credentials were added on travis-ci previously)
-  - docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD"
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
   # push off everything to docker hub
   - docker push tomtom92/multi-client

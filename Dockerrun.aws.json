@@ -1,0 +1,34 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "tomtom92/multi-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "tomtom92/multi-nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": ["client", "server"]
+    },
+    {
+      "name": "server",
+      "image": "tomtom92/multi-server",
+      "hostname": "api",
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "tomtom92/multi-worker",
+      "essential": false
+    }
+  ]
+}
